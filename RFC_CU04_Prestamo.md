@@ -37,6 +37,22 @@ El objetivo principal de este prototipo es implementar de forma ejecutable la l�
 
 ---
 
+## 1.2 Trazabilidad con Especificaciones y Diagramas del Proyecto
+
+Este RFC y su prototipo ejecutable constituyen la implementación técnica directa de los artefactos de análisis y diseño desarrollados en la documentación del proyecto:
+
+* **Vinculación con Especificaciones Técnicas (Specs):**
+  * **Spec 1 (Gestión de Códigos de Inventario):** El prototipo valida la disponibilidad física de stock en `Equipo.js` antes de permitir el alta de la solicitud (`POST /api/prestamos`), alineándose con el rastreo de identificadores unívocos para evitar solapamiento de fechas.
+  * **Spec 2 (Control Manual de Sanciones):** El servicio `ValidationService.js` consulta `Usuario.estaSancionado()` bloqueando el formulario si la Dirección ingresó manualmente al alumno a la lista negra (sanción activa).
+
+* **Vinculación con Diagramas del Sistema (UML):**
+  * **Diagrama de Casos de Uso:** Implementa la lógica ejecutable del caso de uso principal **CU_04 (Solicitar préstamo de equipamiento audiovisual)** y la derivación por regla de antelación a **CU_08 (Solicitud Especial < 48 hs)**.
+  * **Diagrama de Clases:** Traduce al backend relacional (SQLite) y a controladores MVC las entidades centrales del modelo conceptual (`Usuario`, `Equipo`, `SolicitudPrestamo`).
+  * **Diagramas de Secuencia y Comunicación (Interacción 1):** Codifica en `ValidationService.js` la secuencia exacta de llamadas: `consultarStock()`, `validarTopeEquipos()`, `validarAntelacion()` y la emisión de alertas.
+  * **Diagrama de Máquinas de Estado:** Garantiza que el atributo `estado` de `solicitudes_prestamo` respete la enumeración estricta de estados del RNF-11 (`Pendiente de aprobación docente`, `Pendiente de autorización extraordinaria`, `Aprobado`, `En préstamo`, `Devuelto`, `Cancelado/Rechazado`).
+
+---
+
 ## 2. Stack Tecnológico
 
 | Capa | Tecnología | Versión | Motivo de la elección |
